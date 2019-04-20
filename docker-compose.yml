@@ -1,0 +1,8 @@
+version: '2.1'
+
+services:
+  flask-rest-api-example:
+    image: flask-rest-api-example
+    build: .
+    ports:
+      - 5000:5000
