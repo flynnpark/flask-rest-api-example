@@ -1,13 +1,9 @@
-FROM python:3.7-slim
+FROM tiangolo/uwsgi-nginx-flask:python3.6
 
 ENV NAME TEST
 
-LABEL Name=flask-rest-api-example Version=0.0.1
-EXPOSE 5000
+LABEL Name=flask-rest-api-example Version=0.0.2
 
-WORKDIR /app
-ADD . /app
+COPY ./app /app
 
-# Using pip:
 RUN pip install -r requirements.txt
-CMD ["python", "api.py"]
