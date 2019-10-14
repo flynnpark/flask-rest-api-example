@@ -5,4 +5,4 @@ services:
     image: flask-rest-api-example
     build: .
     ports:
-      - 5000:5000
+      - 80:80
