@@ -1,8 +1,36 @@
-version: '2.1'
+version: '3.7'
 
 services:
-  flask-rest-api-example:
-    image: flask-rest-api-example
-    build: .
+  db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_DB=flask-example
+      - POSTGRES_USER=administrator
+      - POSTGRES_PASSWORD=administrator
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8
+    healthcheck:
+      test: 'pg_isready -h localhost -p 5432 -q -U administrator -d flask-example'
+      interval: 3s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+
+  api:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: flask-rest-api-example:0.1.0
+    container_name: flask-rest-api-example
+    volumes:
+      - ./app:/app
     ports:
-      - 80:80
+      - '80:80'
+    depends_on:
+      - db
+    links:
+      - db
+    environment:
+      - FLASK_DEBUG=1
+      - 'RUN=python main.py --host=0.0.0.0 --port=80'
+    command: python main.py --host=0.0.0.0 --port=80
